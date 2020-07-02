@@ -4,7 +4,9 @@
 
 [Less中文网](https://less.bootcss.com/)
 
-## 变量(Variables)
+## 快速入门
+
+### 变量(Variables)
 
 ```less
 @widtd: 10px;
@@ -25,7 +27,7 @@
 }
 ```
 
-## 混合(Minins)
+### 混合(Minins)
 
 > 概念
 
@@ -51,7 +53,7 @@
 }
 ```
 
-## 嵌套（Nesting）
+### 嵌套（Nesting）
 
 > 概念
 
@@ -140,7 +142,7 @@
 }
 ```
 
-## 运算（Operations）
+### 运算（Operations）
 
 算数运算符 + - * / 可以对任何数字、颜色或变量进行运算。可能的话，算数运算符在做加、减或比较之前会进行单位换算。计算的结果以最左侧操作数的单位类型为准。如果单位换算无效或失去意义，则忽略单位。
 
@@ -183,4 +185,98 @@ background-color: #112244 + #111; //结果是 #223355
 @var: 50vh / 2;
 width: calc(50% + (@var - 20px)) //结果是 calc(50% + (25vh -20px))
 ```
+
+### 转义（Escaping）
+
+转移允许使用任意字符串作为属性或者变量值。任何 ~"anything" 或 ~'anything' 形式的内容都将按原样输出，除非 [interpolation](https://less.bootcss.com/features/#variables-feature-variable-interpolation)。
+
+``` less
+@min768: ~"(min-width: 768px)";
+.element {
+  @media @min768 {
+    font-size: 1.2rem;
+  }
+}
+```
+
+编译为：
+
+```css
+@media (min-width: 768px) {
+	.element {
+		font-size: 1.2rem;
+	}
+}
+```
+
+ Less 3.5开始，可以简写为：
+
+```less
+@media (min-width: 768px);
+.element {
+  @media @min768 {
+    font-size: 1.2rem;
+  }
+}
+```
+
+> 在 Less 3.5+ 版本中，许多以前需要“引号转义”的情况就不再需要了。
+
+### 函数（Functions）
+
+#### 逻辑函数
+
+##### if
+
+> if(condition, value1, value2) 
+
+```less
+# condition为true,返回value1，否则返回value2
+@media: foo;
+div {
+    margin: if((2 > 1), 0, 3px); //返回0
+    color： if((iscolor(@some)), @some, black) 
+}
+```
+
+结果
+
+```css
+div {
+    margin: 0;
+    color: black;
+}
+```
+
+> 多条件并列
+
+```less
+if(not (true), foo, bar);
+if((true) and (2 > 1), foo, bar);
+if((false) or (isstring("boo!")), foo, bar);
+```
+
+##### boolean
+
+> boolean(condition)
+
+```less
+@bg: black;
+@bg-light: boolean(luma(@bg) > 50%);
+div {
+    backgroud: @bg;
+    color: if(@bg-light, black, white);
+}
+```
+
+结果
+
+```css
+div {
+    background: black;
+    color: white;
+}
+```
+
+##### string
 
